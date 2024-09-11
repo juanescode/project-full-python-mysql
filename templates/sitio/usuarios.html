@@ -1,0 +1,79 @@
+{% include 'sitio/head.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Usuarios</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Lista de Usuarios</h1>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Username</th>
+                    <th>Password</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for usuario in data %}
+                <tr>
+                    <td>{{ usuario.id }}</td>
+                    <td>{{ usuario.username }}</td>
+                    <td>{{ usuario.password }}</td>
+                    <td>
+                        <a href="{{ url_for('delete', id=usuario.id) }}" class="btn btn-danger">Eliminar</a>
+                        <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modal{{ usuario.id }}">
+                            Editar
+                        </button>
+                    </td>
+                </tr>
+
+                <!-- Modal -->
+                <div class="modal fade" id="modal{{ usuario.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h1 class="modal-title fs-5" id="exampleModalLabel">{{ usuario.username }}</h1>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form action="{{ url_for('edit', id=usuario.id) }}" method="post">
+                                <label>Username</label>
+                                <input type="text" class="form-control mb-3" name="username" value="{{ usuario.username }}">
+                                <label>Password</label>
+                                <input type="text" class="form-control mb-3" name="password" value="{{ usuario.password }}">
+                        </div>
+                        <div class="modal-footer">
+                          <button type="submit" class="btn btn-primary">Guardar cambios</button>
+                        </div>
+                            </form>
+                      </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </tbody>
+        </table>
+        <form action="{{ url_for('addUser') }}" method="post">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" class="form-control" id="username" name="username" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" class="form-control" id="password" name="password" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Agregar Usuario</button>
+        </form>
+    </div>
+</body>
+</html>
+
+{% include 'sitio/footer.html' %}
